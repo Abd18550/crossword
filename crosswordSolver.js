@@ -1,22 +1,30 @@
 const puzzle = '2001\n0..0\n1000\n0..0'
 const words = ['aaab', 'aaac', 'aaad', 'aaae']
 let rows = [];
-const finalWords = new Set();
+let finalWords = new Set();
 let RowsResult;
+let CopyOfWords = [];
+
 
 function check(puzzle, words) {
+    if (!Array.isArray(words)) {
+        return false;
+    }
+    if (CopyOfWords.length === 0) {
+        CopyOfWords = [...words];
+    }
     if (typeof puzzle !== 'string') {
         return false;
     }
-    rows = puzzle.split('\n'); // Split the puzzle into rows
+    rows = puzzle.split('\n'); 
     const rowLength = rows[0].length;
     let sumNumbersOfRows = 0;
     let arrOfNums = [];
     for (const row of rows) {
-        if (row.length !== rowLength) { // All rows should have the same length
+        if (row.length !== rowLength) {
             return false;
         }
-        if (!/^[0-2.]+$/.test(row)) { // Check if the row contains only valid characters
+        if (!/^[0-2.]+$/.test(row)) {
             return false;
         }
         for (const index of row) {
@@ -31,23 +39,19 @@ function check(puzzle, words) {
         return false;
     }
     for (const word of words) {
-        // Duplicate check
+       
         if (finalWords.has(word)) {
             return false;
         }
-        // Add to the set
+       
         finalWords.add(word);
     }
     if (sumNumbersOfRows !== words.length) {
         return false;
     }
-    RowsResult = rows.map(row => row.split('')); // Split rows into arrays of characters
+    RowsResult = rows.map(row => row.split('')); 
     rows = rows.map(row => row.split(''));
-    if (words[0][0] === 's') {
-        if (words[0] !== 'sun') {
-            words.reverse()
-        }
-    }
+
     return true;
 }
 
@@ -181,13 +185,20 @@ function solve(puzzle, words) {
 
 let finalResult = solve(puzzle, words)
 let index = finalResult.indexOf('0')
-if (finalResult === 'Error') {
-    console.log('Error')
-}else{
 if (index !== -1) {
-    console.log('Error')
-}else{
-    console.log(finalResult)
+    rows = [];
+    finalWords.clear(); 
+    RowsResult = [];
+    finalResult = solve(puzzle, CopyOfWords.reverse());
+
+    let ind = finalResult.indexOf('0');
+    if (ind !== -1) {
+        console.log('Error');
+    } else {
+        console.log(finalResult);
+    }
+} else {
+    console.log(finalResult);
 }
-}
+
  
